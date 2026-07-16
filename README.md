@@ -26,6 +26,8 @@ write); `agent-memory.md` holds the accumulated content, read on demand — so
 the memory log can grow without growing every session's baseline context
 cost.
 
+![How agent memory is wired, and the payoff of writing once and reusing every session](docs/images/agent-memory-wiring-and-payoff.png)
+
 ## Install (Claude Code plugin)
 
 ```
