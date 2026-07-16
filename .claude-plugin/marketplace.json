@@ -1,0 +1,14 @@
+{
+  "name": "simple-agent-memory",
+  "owner": {
+    "name": "Brian Schroeder",
+    "url": "https://github.com/brianschroeder"
+  },
+  "plugins": [
+    {
+      "name": "simple-agent-memory",
+      "source": ".",
+      "description": "Repo-level agent memory for Claude Code: a git-tracked learnings log agents read when stuck and append to as they work."
+    }
+  ]
+}

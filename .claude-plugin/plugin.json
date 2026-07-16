@@ -1,0 +1,13 @@
+{
+  "name": "simple-agent-memory",
+  "version": "0.1.0",
+  "description": "Repo-level agent memory for Claude Code: a git-tracked learnings log agents read when stuck and append to as they work.",
+  "author": {
+    "name": "Brian Schroeder",
+    "url": "https://github.com/brianschroeder"
+  },
+  "homepage": "https://github.com/brianschroeder/simple-agent-memory",
+  "repository": "https://github.com/brianschroeder/simple-agent-memory",
+  "license": "MIT",
+  "keywords": ["claude-code", "agent", "memory", "learnings", "context"]
+}
