@@ -20,7 +20,8 @@ learnings survive across fresh agent sessions. It sets up two things:
    resolved root causes, dead ends, repo conventions).
 2. **A block in `CLAUDE.md`** instructing agents to *read* `agent-memory.md` at the start
    of non-trivial work and when stuck, and to *append* to it when they learn something
-   durable.
+   durable — checking for and resolving duplicate or contradicting entries first, rather
+   than stacking near-identical notes.
 
 The division of labor matters: `CLAUDE.md` holds the *always-loaded behavior* (when to
 read and write), and `agent-memory.md` holds the *accumulated content*, read on demand.

@@ -10,9 +10,12 @@ shared memory for anyone (human or agent) working here.
 - **Append to `./agent-memory.md`** whenever you learn something a cold-start agent would
   have wanted to know: an environment or setup quirk, a non-obvious build/test/run
   invocation, the root cause of a resolved (especially recurring) bug, a dead end worth
-  avoiding, or a repo-specific convention not enforced by code. Use the entry format
-  documented at the top of that file, add the entry while the detail is fresh, and keep
-  it short and high-signal.
+  avoiding, or a repo-specific convention not enforced by code. **Before appending, scan
+  the existing Log for an entry covering the same symptom or topic** — if one exists,
+  merge your update into it or mark it `SUPERSEDED:` and add the corrected entry above it,
+  rather than adding a new entry that duplicates or silently contradicts it. Use the entry
+  format documented at the top of that file, add the entry while the detail is fresh, and
+  keep it short and high-signal.
 - **Never record secrets, transient task state, or anything already well covered by the
   code or docs** — link to those instead.
 - **Using a tool that follows the `AGENTS.md` convention instead of

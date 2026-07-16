@@ -25,7 +25,10 @@ it lean and true — it is a signal store, not a scratchpad.
 - You catch yourself thinking *"I wish I'd known that at the start."* That thought is
   the trigger to add an entry.
 
-Add the entry **as soon as you learn it**, while the detail is fresh — not "later."
+Add the entry **as soon as you learn it**, while the detail is fresh — not "later." Before
+adding it, check whether an existing entry already covers the same symptom or topic — if
+so, merge into it or mark it `SUPERSEDED:` (see "Keep it curated" below) instead of
+stacking a near-duplicate or silently contradicting entry.
 
 ---
 
