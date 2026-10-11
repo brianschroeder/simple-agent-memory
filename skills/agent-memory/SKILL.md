@@ -1,84 +1,54 @@
 ---
 name: agent-memory
 description: >-
-  Set up repo-level agent memory: create an `agent-memory.md` learnings log at the
-  repository root and wire up `CLAUDE.md` so agents read it when stuck and append durable
-  learnings as they work. Use this whenever the user wants to add, set up, bootstrap,
-  install, enable, or repair "agent memory," a "learnings file," a persistent
-  notes/gotchas log for agents, or wants to make Claude Code carry lessons across sessions
-  within a repo — even if they don't say the word "skill." Also use it to re-apply the
-  pattern to a new repo.
+  Set up, upgrade, or repair a repository's single-file MEMORY.md and its
+  CLAUDE.md / AGENTS.md instructions. Migrate legacy agent-memory.md entries
+  without losing content; use for requests to install persistent repo learnings.
 ---
 
-# Agent Memory (repo-level)
+# Agent memory
 
-This skill installs a lightweight, git-tracked memory pattern into a repository so that
-learnings survive across fresh agent sessions. It sets up two things:
+Keep durable repo learnings in one `MEMORY.md` at the repository root. Use
+[the memory template](assets/MEMORY.template.md) for its entry format and
+[the instruction block](assets/claude-md-block.md) for reading, writing, and
+first-run migration. Read both before editing. This is an OKF-inspired
+single-file convention, not an Open Knowledge Format bundle.
 
-1. **`agent-memory.md`** at the repo root — a curated, high-signal log of learnings that
-   a cold-start agent would have wanted to know (setup quirks, non-obvious invocations,
-   resolved root causes, dead ends, repo conventions).
-2. **A block in `CLAUDE.md`** instructing agents to *read* `agent-memory.md` at the start
-   of non-trivial work and when stuck, and to *append* to it when they learn something
-   durable — checking for and resolving duplicate or contradicting entries first, rather
-   than stacking near-identical notes.
+## Setup or upgrade
 
-The division of labor matters: `CLAUDE.md` holds the *always-loaded behavior* (when to
-read and write), and `agent-memory.md` holds the *accumulated content*, read on demand.
+1. Confirm the intended repository root. Read existing `CLAUDE.md`, `AGENTS.md`,
+   `MEMORY.md`, and `agent-memory.md` before writing. Respect an explicitly
+   configured custom memory path; don't silently create a second memory store.
+   Inspect filename case variants as well, especially on macOS and Windows.
+2. Follow the instruction block's first-run migration rules. For a fresh repo,
+   copy the memory template only when no memory exists. For an existing repo,
+   retain all actual entries, custom guidance, dates, commands, uncertainty, and
+   superseded history. Add entry metadata only where the source supports it.
+3. Install or upgrade the managed instruction block in both `CLAUDE.md` and
+   `AGENTS.md` when both exist as separate files. If only one exists, use it.
+   If neither exists, use the user's requested file, otherwise `CLAUDE.md`.
+   If they resolve to the same file, edit it once. Preserve everything outside
+   `<!-- agent-memory:start -->` / `<!-- agent-memory:end -->`.
+4. An old marker is an upgrade target, not a reason to skip setup. Replace a
+   single intact old block with the bundled version, retaining any compatible
+   user customizations. Leave an identical current block unchanged. Append once
+   when absent. For unmatched or multiple marker pairs, or custom instructions
+   conflicting with the upgrade, stop that edit and explain the conflict.
+5. Read back the result. Check entry preservation, same-file links, one managed
+   block per instruction file, and consistent memory paths. Report whether this
+   was a fresh install, upgrade, unchanged setup, or blocked migration. Report
+   the recovery location when one was needed. Do not claim unfinished migration
+   succeeded or commit an unresolved partial result.
 
-## Setting it up
+Plugin updates alone do not edit previously installed repo instructions. Users
+must invoke this updated setup skill once, or manually install the updated block.
+The block is self-contained so its first-run migration does not need the plugin.
 
-Do this directly with your own file tools — read the bundled templates below, then create
-or edit the files in the target repo. No script is needed; you create the files yourself.
-Work at the **repository root** (the top of the project — confirm with
-`git rev-parse --show-toplevel` if git is available, otherwise use the project's top
-directory).
+## Scope
 
-Both steps are deliberately **non-destructive — check before you write:**
-
-1. **Create `agent-memory.md` at the repo root — only if it's missing.**
-   - If `./agent-memory.md` already exists, leave it untouched. It holds accumulated
-     learnings, and overwriting it would throw them away.
-   - If it does not exist, create it with the exact contents of
-     `assets/agent-memory.template.md`.
-
-2. **Add the instruction block to `CLAUDE.md` — exactly once.**
-   - Read `./CLAUDE.md` (create it if it doesn't exist).
-   - If it already contains the marker `<!-- agent-memory:start -->`, leave it as-is so
-     the block isn't duplicated.
-   - Otherwise, append the full contents of `assets/claude-md-block.md`, preceded by a
-     blank line if the file already has content.
-
-Then report what changed (created the log? added the block? already present?) and remind
-the user to commit both files.
-
-## Manual example
-
-For a fresh repo with no `CLAUDE.md` yet, the result is simply the two files at the root:
-`agent-memory.md` (a copy of the template) and `CLAUDE.md` (containing the marker-wrapped
-block). For a repo that already has a `CLAUDE.md`, the block is appended to the end of the
-existing file and nothing else is touched.
-
-## Customization notes
-
-- **Different filename:** if the user wants a different name (e.g. `LEARNINGS.md`), rename
-  the created file and update the path references inside the `CLAUDE.md` block to match.
-- **Monorepos / per-package memory:** the pattern can be applied per subdirectory. A
-  subdirectory `CLAUDE.md` loads on demand when an agent works in that directory, so a
-  package-local `agent-memory.md` + a package-local `CLAUDE.md` block scopes memory to
-  that package.
-- **On-demand vs. always-loaded:** the default wires the file for *on-demand reading*. Do
-  not switch to an `@agent-memory.md` import unless the log is small and always relevant —
-  imports load the whole file into context at every session start and grow the baseline
-  cost as the log grows.
-- **Relationship to Claude Code's native auto memory:** native auto memory is per-user and
-  lives outside the repo (not shared, not reviewed). This committed `agent-memory.md` is
-  the *shared, versioned, review-gated* layer. They complement each other; this skill sets
-  up the shared one.
-
-## Bundled resources
-
-- `assets/agent-memory.template.md` — the starter log, including the embedded rules for
-  what/when to write and read, and the entry format. This is the substance of the pattern;
-  copy it verbatim to create the log.
-- `assets/claude-md-block.md` — the marker-wrapped block to append to `CLAUDE.md`.
+Record durable conclusions, root causes, gotchas, and useful dead ends. Keep
+repeatable procedures and volatile answers in their owning docs or tools and
+link to them. Don't store secrets or transient task state. Read memory on demand;
+do not introduce an automatic full-file import. Do not change tool-native memory
+outside the requested repository. A user-requested package-local installation
+uses the same rules within that package.

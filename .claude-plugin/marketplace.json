@@ -8,7 +8,7 @@
     {
       "name": "simple-agent-memory",
       "source": ".",
-      "description": "Repo-level agent memory for Claude Code: a git-tracked learnings log agents read when stuck and append to as they work."
+      "description": "Single-file repo memory in MEMORY.md: tagged durable learnings, related links, and lossless legacy migration."
     }
   ]
 }
