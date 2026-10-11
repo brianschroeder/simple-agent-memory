@@ -1,30 +1,53 @@
 <!-- agent-memory:start -->
 ## Agent memory
 
-This repo keeps a durable, git-tracked learnings log at `./agent-memory.md`. It is the
-shared memory for anyone (human or agent) working here.
+<!-- simple-agent-memory:instructions=2 -->
+Keep shared repo learnings in `./MEMORY.md`, read on demand. Before non-trivial
+work and whenever stuck, search its headings, tags, and symptoms; read matching
+entries and follow related links before investigating from scratch.
 
-- **Read `./agent-memory.md`** at the start of any non-trivial task, and **whenever you
-  hit a persistent or recurring issue** — check whether it's already a known gotcha
-  before investigating from scratch.
-- **Append to `./agent-memory.md`** whenever you learn something a cold-start agent would
-  have wanted to know: an environment or setup quirk, a non-obvious build/test/run
-  invocation, the root cause of a resolved (especially recurring) bug, a dead end worth
-  avoiding, or a repo-specific convention not enforced by code. **Before appending, scan
-  the existing Log for an entry covering the same symptom or topic** — if one exists,
-  merge your update into it or mark it `SUPERSEDED:` and add the corrected entry above it,
-  rather than adding a new entry that duplicates or silently contradicts it. Use the entry
-  format documented at the top of that file, add the entry while the detail is fresh, and
-  keep it short and high-signal.
-- **Never record secrets, transient task state, or anything already well covered by the
-  code or docs** — link to those instead.
-- **Using a tool that follows the `AGENTS.md` convention instead of
-  `CLAUDE.md`** (e.g. Cursor, Aider)? Add this block to `AGENTS.md` instead
-  of, or in addition to, `CLAUDE.md` — the read/append rules are identical
-  either way.
+Write durable findings while fresh. Use one unique heading per learning and
+plain Markdown fields: Type, Tags, Discovered, Status, Trigger / symptom,
+What to know / do, Why it matters, Evidence, and optional Related links.
+Use a few lowercase tags. Types may include gotcha, convention, root-cause,
+and dead-end. Discovered is the original YYYY-MM-DD or unknown. Status is
+current, hypothesis, or superseded. Record unknown evidence as unknown.
+Preserve uncertainty; formatting is not verification. Search before adding:
+update duplicates, and retain superseded reasoning with a replacement link.
+Never record secrets, transient task state, or facts already covered by docs;
+link to those sources. Do not import the full file automatically.
 
-> Read the file on demand (as above) rather than importing it with `@agent-memory.md`:
-> imported files load in full at every session start and grow your baseline context as
-> the log grows, whereas on-demand reads keep sessions lean and only pay the cost when
-> the memory is actually needed.
+### First-run migration
+
+Before writing memory, inspect `MEMORY.md`, legacy `agent-memory.md`, filename
+case variants, and any custom path named in existing instructions. Honor custom
+paths; do not repurpose an unrelated `MEMORY.md` or overwrite another file.
+
+- If neither file exists, create `MEMORY.md` with a Memory heading, these entry
+  conventions, a Memories section, and `<!-- simple-agent-memory:format=2 -->`.
+- Before converting any existing memory file, preserve its exact current bytes. An existing
+  Git commit is sufficient only if it contains those exact bytes; otherwise
+  make a recoverable backup outside the repo and report its location. Do not
+  add backup copies to the active memory store or expose private data in commits.
+- Convert existing entries in place or into `MEMORY.md`. Preserve all original
+  entry text, commands, dates, caveats, custom guidance, and superseded history;
+  add supported metadata without summarizing away detail. Preserve an original
+  entry as a whole if its boundaries are ambiguous. Do not turn template examples
+  into facts or use the migration date as the discovery date.
+- When both files contain memory, preserve both before merging. Skip an entry
+  only if its original content is already present verbatim. Keep differing
+  entries and flag contradictions; do not silently resolve them. If ownership,
+  collision, or contradictory instructions make a safe merge unclear, leave
+  both files intact and report what needs resolution.
+- Read back the result and account for every source entry and custom section.
+  Check heading links, repairing known repo references to the old path without
+  changing unrelated instructions. Remove the legacy file only after coverage
+  is verified and recovery is available. Then add the format=2 marker if absent.
+- A format=2 marker means formatting completed, not that legacy content can be
+  ignored. If legacy memory remains or reappears, compare it using the same
+  rules. If only completed v2 memory remains, do not reformat it on each run.
+  On interruption, inspect actual files and resume without duplicating entries.
+
+This is an OKF-inspired single-file convention, not a conformant OKF bundle.
+The same rules apply in `CLAUDE.md` and `AGENTS.md`.
 <!-- agent-memory:end -->
