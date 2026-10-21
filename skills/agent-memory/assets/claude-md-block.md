@@ -17,8 +17,8 @@ Record durable root causes, gotchas, conventions, and useful dead ends while
 fresh. Search first, and update a matching concept instead of duplicating it.
 Write each new learning to `agent-memory/<slug>.md`: the title without status
 markers, lowercased, with every run of characters other than `a-z` and `0-9`
-replaced by one hyphen (`v3.2` becomes `v3-2`). Use a name no other concept
-uses, and keep it stable because links use it.
+replaced by one hyphen and no hyphen at either end (`v3.2` becomes `v3-2`). Use
+a name no other concept uses, and keep it stable because links use it.
 
 ```markdown
 ---
@@ -46,9 +46,9 @@ generated:
   what you do not know. Never invent dates, evidence, or verification.
 - Update `generated` when you change a concept's meaning. Preserve frontmatter
   keys you do not recognize. Link concepts with relative paths (`other.md`).
-- List each concept in `index.md`, newest first, under its type's plural
-  heading (`Root Cause` under `# Root causes`; add a heading for a new type), as
-  `* [Title](slug.md) - description`. Record creations, supersessions, renames,
+- List each concept in `index.md` under its type's plural heading (`Root Cause`
+  under `# Root causes`; add a heading for a new type), new concepts at the top,
+  as `* [Title](slug.md) - description`. Record creations, supersessions, renames,
   and migrations in `log.md` under a `## YYYY-MM-DD` heading, newest first.
 - To supersede, set `status: deprecated`, link the replacement, move its index
   line under `# Deprecated`, and keep the file and its reasoning.
@@ -97,6 +97,4 @@ directory that another tool owns.
 - On a repeated or interrupted run, inspect the actual files and resume without
   duplicate concepts or index lines. Reconcile a legacy file that reappears the
   same way.
-
-The same rules apply in `CLAUDE.md` and `AGENTS.md`.
 <!-- agent-memory:end -->
