@@ -25,6 +25,8 @@ agent-memory/
   findings from hypotheses and superseded ones, `verified` records who actually
   re-checked a claim, and `stale_after` flags findings that need a re-check.
 
+![How agent memory is wired, and the payoff of writing once and reusing every session](docs/images/agent-memory-wiring-and-payoff.png)
+
 Because the bundle is plain OKF, other OKF tools can read it, including the
 graph viewer in Google's reference repository.
 See the [v2 proposal and migration spec](docs/okf-memory-v2.md).
