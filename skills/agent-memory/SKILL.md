@@ -30,7 +30,9 @@ seed a new bundle. Read all three before editing.
    date. Create no concepts. For an existing repo, follow the instruction
    block's first-run migration rules. Retain all actual entries, custom
    guidance, dates, commands, uncertainty, and superseded history. Add
-   frontmatter only where the source supports it. To tell stock text from user
+   frontmatter only where the source supports it. Upgrade the block (step 3)
+   before removing the legacy file, so an interrupted run never leaves an old
+   block pointing at a deleted file. To tell stock text from user
    customizations, compare with the shipped
    [legacy log template](assets/legacy/agent-memory.template.md) and
    [legacy block](assets/legacy/claude-md-block.md).
