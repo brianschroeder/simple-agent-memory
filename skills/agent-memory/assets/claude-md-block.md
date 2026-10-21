@@ -1,53 +1,102 @@
 <!-- agent-memory:start -->
 ## Agent memory
 
-<!-- simple-agent-memory:instructions=2 -->
-Keep shared repo learnings in `./MEMORY.md`, read on demand. Before non-trivial
-work and whenever stuck, search its headings, tags, and symptoms; read matching
-entries and follow related links before investigating from scratch.
+<!-- simple-agent-memory:instructions=3 -->
+Shared repo learnings live in `./agent-memory/`, an
+[Open Knowledge Format](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md)
+(OKF) v0.2 bundle: one Markdown concept file per learning, plus the reserved
+`index.md` and `log.md`. Read it on demand; do not import it automatically.
 
-Write durable findings while fresh. Use one unique heading per learning and
-plain Markdown fields: Type, Tags, Discovered, Status, Trigger / symptom,
-What to know / do, Why it matters, Evidence, and optional Related links.
-Use a few lowercase tags. Types may include gotcha, convention, root-cause,
-and dead-end. Discovered is the original YYYY-MM-DD or unknown. Status is
-current, hypothesis, or superseded. Record unknown evidence as unknown.
-Preserve uncertainty; formatting is not verification. Search before adding:
-update duplicates, and retain superseded reasoning with a replacement link.
-Never record secrets, transient task state, or facts already covered by docs;
-link to those sources. Do not import the full file automatically.
+Before non-trivial work and whenever stuck, read `agent-memory/index.md`, then
+search the bundle for the symptom, error text, and tags. Open matching concepts
+and follow their links before investigating from scratch. `status: draft` is
+unconfirmed, `deprecated` is history, a concept without `verified` is
+unverified, and one past its `stale_after` is a lead to re-check, not a fact.
 
-### First-run migration
+Record durable root causes, gotchas, conventions, and useful dead ends while
+fresh. Search first, and update a matching concept instead of duplicating it.
+Write each new learning to `agent-memory/<slug>.md`: the title without status
+markers, lowercased, with every run of characters other than `a-z` and `0-9`
+replaced by one hyphen (`v3.2` becomes `v3-2`). Use a name no other concept
+uses, and keep it stable because links use it.
 
-Before writing memory, inspect `MEMORY.md`, legacy `agent-memory.md`, filename
-case variants, and any custom path named in existing instructions. Honor custom
-paths; do not repurpose an unrelated `MEMORY.md` or overwrite another file.
+```markdown
+---
+type: Gotcha                # or Root Cause, Convention, Dead End, Guide
+title: "<the symptom a stuck agent would search for>"
+description: "<one sentence>"
+tags: [<few>, <lowercase>, <tags>]
+status: stable              # draft if unconfirmed; deprecated once superseded
+discovered: YYYY-MM-DD      # original discovery date; omit if unknown
+generated:
+  by: <tool>/<model>        # or human:<handle> for a person
+  at: <YYYY-MM-DDTHH:MM:SSZ>
+---
 
-- If neither file exists, create `MEMORY.md` with a Memory heading, these entry
-  conventions, a Memories section, and `<!-- simple-agent-memory:format=2 -->`.
-- Before converting any existing memory file, preserve its exact current bytes. An existing
-  Git commit is sufficient only if it contains those exact bytes; otherwise
-  make a recoverable backup outside the repo and report its location. Do not
-  add backup copies to the active memory store or expose private data in commits.
-- Convert existing entries in place or into `MEMORY.md`. Preserve all original
-  entry text, commands, dates, caveats, custom guidance, and superseded history;
-  add supported metadata without summarizing away detail. Preserve an original
-  entry as a whole if its boundaries are ambiguous. Do not turn template examples
-  into facts or use the migration date as the discovery date.
-- When both files contain memory, preserve both before merging. Skip an entry
-  only if its original content is already present verbatim. Keep differing
-  entries and flag contradictions; do not silently resolve them. If ownership,
-  collision, or contradictory instructions make a safe merge unclear, leave
-  both files intact and report what needs resolution.
-- Read back the result and account for every source entry and custom section.
-  Check heading links, repairing known repo references to the old path without
-  changing unrelated instructions. Remove the legacy file only after coverage
-  is verified and recovery is available. Then add the format=2 marker if absent.
-- A format=2 marker means formatting completed, not that legacy content can be
-  ignored. If legacy memory remains or reappears, compare it using the same
-  rules. If only completed v2 memory remains, do not reformat it on each run.
-  On interruption, inspect actual files and resume without duplicating entries.
+# Symptom
+# What to know
+# Why it matters
+# Related
+```
 
-This is an OKF-inspired single-file convention, not a conformant OKF bundle.
+- Add `sources` (entries with `id`, `resource`, `title`, cited in the body as
+  `[^id]`) for real evidence, a `verified` entry (`by`, `at`) only after
+  actually re-checking the claim, and `stale_after` when the finding depends on
+  something that changes. Use block-style YAML, not `{ }` flow mappings. Omit
+  what you do not know. Never invent dates, evidence, or verification.
+- Update `generated` when you change a concept's meaning. Preserve frontmatter
+  keys you do not recognize. Link concepts with relative paths (`other.md`).
+- List each concept in `index.md`, newest first, under its type's plural
+  heading (`Root Cause` under `# Root causes`; add a heading for a new type), as
+  `* [Title](slug.md) - description`. Record creations, supersessions, renames,
+  and migrations in `log.md` under a `## YYYY-MM-DD` heading, newest first.
+- To supersede, set `status: deprecated`, link the replacement, move its index
+  line under `# Deprecated`, and keep the file and its reasoning.
+- Never record secrets, credentials, emails, or transient task state, or repeat
+  what code and docs already cover; link to those instead.
+
+### First-run setup and migration
+
+Before writing memory, inspect `agent-memory/`, a legacy `agent-memory.md`,
+filename case variants, and any custom memory path these instructions name
+(any path other than `./agent-memory.md`). Honor a custom path; if its bundle
+location is unclear, stop and ask. Do not repurpose an `agent-memory/`
+directory that another tool owns.
+
+- No memory yet: create `agent-memory/index.md` whose only frontmatter is
+  `okf_version: "0.2"`, with one heading per type plus `# Deprecated`, and
+  `log.md` (no frontmatter) with an Initialization entry. Create no placeholder
+  concepts.
+- Before converting a legacy file, preserve its exact current bytes: a commit
+  that contains them (offer to commit uncommitted edits first), or a backup
+  outside the repo whose location you report. Never commit backups or local
+  paths.
+- Create the bundle as above if it is missing, then convert each legacy entry
+  into one concept, listed in the legacy log's order. Its heading, minus status
+  markers such as `SUPERSEDED:` or `(unconfirmed)`, becomes `title`. The rest
+  of the entry is the body, verbatim and not restructured; you may add a
+  `# Related` section. Choose `type`, `description`, and `tags` from the
+  entry's content. Take dates and status only from what it states:
+  `Discovered YYYY-MM-DD` sets `discovered`, `SUPERSEDED:` sets `deprecated`,
+  stated uncertainty sets `draft`, and anything else is `stable`. Reformatting
+  is neither authorship nor verification, so omit `generated` and `verified`
+  unless the entry names its author or checks. Keep an entry whole when its
+  boundaries are unclear.
+- Skip the template's example entry and any section that is unchanged template
+  text. Keep every other non-entry section as a `type: Guide` concept; when
+  unsure, keep it.
+- When memory exists in more than one place, skip an entry only if its content
+  is already present verbatim. Keep differing claims and flag contradictions.
+  If a safe merge is unclear, leave every file intact and report.
+- Before removing the legacy file, verify: every entry and custom section maps
+  to a concept, every non-reserved `.md` in the bundle has frontmatter with a
+  non-empty `type`, `index.md` lists every concept, and relative links resolve.
+  Repair known repo references to the old file. Add a Migration entry to
+  `log.md` naming the source file and the commit that holds its exact original,
+  if one does. Then remove the legacy file.
+- On a repeated or interrupted run, inspect the actual files and resume without
+  duplicate concepts or index lines. Reconcile a legacy file that reappears the
+  same way.
+
 The same rules apply in `CLAUDE.md` and `AGENTS.md`.
 <!-- agent-memory:end -->

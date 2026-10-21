@@ -1,7 +1,7 @@
 {
   "name": "simple-agent-memory",
   "version": "0.2.0",
-  "description": "Single-file repo memory in MEMORY.md: tagged durable learnings, related links, and lossless legacy migration.",
+  "description": "Repo memory as an Open Knowledge Format (OKF v0.2) bundle: one tagged, dated concept per learning, an index for progressive disclosure, and lossless migration from agent-memory.md.",
   "author": {
     "name": "Brian Schroeder",
     "url": "https://github.com/brianschroeder"
@@ -14,6 +14,8 @@
     "agent",
     "memory",
     "learnings",
-    "context"
+    "context",
+    "okf",
+    "open-knowledge-format"
   ]
 }
