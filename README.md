@@ -1,70 +1,91 @@
 # simple-agent-memory
 
-A repo-level memory pattern for AI coding agents. Learnings survive across
-fresh agent sessions instead of being re-discovered from scratch every time.
-
-## The problem
-
-Every new agent session starts with a blank context. Environment quirks,
-non-obvious build invocations, root causes of resolved bugs, and dead ends
-all get re-learned — or worse, re-broken — session after session, unless
-something persists them.
+Durable repo learnings in an **`agent-memory/`** directory, shared across agent
+sessions and reviewed in Git. The directory is an
+[Open Knowledge Format (OKF) v0.2](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md)
+bundle: one Markdown file per learning, with YAML frontmatter for its type,
+tags, dates, status, and evidence. No database, runtime, or required tooling.
 
 ## The pattern
 
-Two files, working together:
+```text
+agent-memory/
+  index.md                               # okf_version, one line per concept, grouped by type
+  log.md                                 # dated history: creations, supersessions, migrations
+  pytest-import-errors-in-ci.md          # one concept per learning
+  staging-deploys-need-the-vpn.md
+```
 
-1. **`agent-memory.md`** at the repo root — a curated, git-tracked log of
-   durable learnings (setup quirks, resolved bug root causes, dead ends,
-   repo conventions not enforced by code).
-2. **A block in `CLAUDE.md`** (or `AGENTS.md`) instructing agents to *read*
-   `agent-memory.md` at the start of non-trivial work and when stuck, and to
-   *append* to it when they learn something durable.
-
-`CLAUDE.md`/`AGENTS.md` holds the always-loaded behavior (when to read and
-write); `agent-memory.md` holds the accumulated content, read on demand — so
-the memory log can grow without growing every session's baseline context
-cost.
+- Each concept holds one symptom, root cause, useful dead end, setup quirk, or
+  convention that isn't obvious from the code.
+- A managed block in `CLAUDE.md` and/or `AGENTS.md` tells agents when to read,
+  write, and migrate memory. Agents read `index.md` first, search the bundle for
+  the symptom and tags, then open only the concepts that match.
+- OKF's trust and lifecycle fields carry meaning: `status` separates confirmed
+  findings from hypotheses and superseded ones, `verified` records who actually
+  re-checked a claim, and `stale_after` flags findings that need a re-check.
 
 ![How agent memory is wired, and the payoff of writing once and reusing every session](docs/images/agent-memory-wiring-and-payoff.png)
 
-## Install (Claude Code plugin)
+Because the bundle is plain OKF, other OKF tools can read it, including the
+graph viewer in Google's reference repository.
+See the [v2 proposal and migration spec](docs/okf-memory-v2.md).
 
-```
+## Install
+
+```text
 /plugin marketplace add brianschroeder/simple-agent-memory
 /plugin install simple-agent-memory
 ```
 
-Then, in any repo, ask Claude Code to set up agent memory (e.g. "set up
-agent memory for this repo") and the skill will:
-- create `agent-memory.md` at the repo root, if it doesn't already exist
-- append the instruction block to `CLAUDE.md` (or `AGENTS.md`), if it isn't
-  already there
+Ask the agent to "set up agent memory for this repo." It creates
+`agent-memory/index.md` and `agent-memory/log.md` only when no memory exists and
+installs the instruction block. If both `CLAUDE.md` and `AGENTS.md` already
+exist, it updates both. If only one exists, it uses that file; otherwise it
+defaults to `CLAUDE.md`.
 
-Both steps are non-destructive — existing content is never overwritten.
+## Upgrade an existing installation
 
-## Manual install (no Claude Code plugins)
+After updating the plugin, ask the agent to "upgrade this repo's agent memory
+to the OKF bundle format." Updating the plugin alone does not rewrite
+previously installed repo instructions.
 
-If you're not using Claude Code plugins, just copy the two files by hand:
+The skill upgrades the existing managed block and turns each entry in the old
+`agent-memory.md` into its own concept. Original entry text stays verbatim;
+frontmatter records only what the entry already states, so imported entries are
+never marked verified or given invented dates. The skill verifies coverage and
+a recoverable original before retiring `agent-memory.md`. Repeating setup does
+not duplicate concepts or blocks.
 
-1. Copy [`skills/agent-memory/assets/agent-memory.template.md`](skills/agent-memory/assets/agent-memory.template.md)
-   to `agent-memory.md` at your repo root.
-2. Copy the block from
-   [`skills/agent-memory/assets/claude-md-block.md`](skills/agent-memory/assets/claude-md-block.md)
-   into your `CLAUDE.md` or `AGENTS.md`.
+## Manual setup
 
-Works with any agent that reads `CLAUDE.md`/`AGENTS.md` at session start —
-not Claude Code-specific.
+For a **fresh repository**, copy
+[`index.template.md`](skills/agent-memory/assets/index.template.md) to
+`agent-memory/index.md` and
+[`log.template.md`](skills/agent-memory/assets/log.template.md) to
+`agent-memory/log.md` (set today's date). Add the
+[instruction block](skills/agent-memory/assets/claude-md-block.md) to your
+`CLAUDE.md` or `AGENTS.md` (both if both are used).
 
-## Why on-demand, not `@import`
+For an **existing installation**, preserve surrounding instructions and upgrade
+only the intact `agent-memory:start` / `agent-memory:end` block. Retain compatible
+customizations; resolve conflicting custom paths or malformed markers before
+editing. Let the agent follow the block's first-run migration rules. Never
+create an empty bundle beside unmigrated memory. The block works without the
+plugin.
 
-Don't switch to importing `agent-memory.md` (e.g. `@agent-memory.md`) into
-`CLAUDE.md` unless the log is small and always relevant. Imports load the
-whole file into context at every session start, so the baseline cost grows
-as the log grows. Reading it on demand — at task start and when stuck —
-keeps sessions lean and only pays the cost when the memory is actually
-needed.
+## Keep it useful
+
+Follow the concept format in the
+[instruction block](skills/agent-memory/assets/claude-md-block.md). Search
+before adding; update a matching concept instead of duplicating it. Supersede
+obsolete findings with `status: deprecated` and a link to the replacement, and
+keep the reasoning. Don't record secrets or transient task state. Link to
+existing documentation.
+
+Keep reading on demand rather than importing the bundle. Keep `index.md` in step
+with the concepts; it is how agents decide what to open.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

@@ -22,3 +22,17 @@ jobs:
           head -1 "$FILE" | grep -q '^---$'
           grep -q '^name:' "$FILE"
           grep -q '^description:' "$FILE"
+
+      - name: Validate the OKF bundle templates
+        run: |
+          set -e
+          # OKF v0.2 allows exactly one frontmatter key in a bundle-root index.md
+          # (okf_version) and requires ISO date headings in log.md.
+          D=skills/agent-memory/assets
+          test -f "$D/claude-md-block.md"
+          grep -q '<!-- agent-memory:start -->' "$D/claude-md-block.md"
+          grep -q '<!-- agent-memory:end -->' "$D/claude-md-block.md"
+          test "$(sed -n '1,3p' $D/index.template.md)" = "$(printf '%s\n' '---' 'okf_version: "0.2"' '---')"
+          test "$(grep -c '^---$' $D/index.template.md)" = 2
+          grep -q '^## YYYY-MM-DD$' $D/log.template.md
+          grep -q 'okf_version: "0.2"' $D/claude-md-block.md

@@ -1,7 +1,7 @@
 {
   "name": "simple-agent-memory",
-  "version": "0.1.0",
-  "description": "Repo-level agent memory for Claude Code: a git-tracked learnings log agents read when stuck and append to as they work.",
+  "version": "0.2.0",
+  "description": "Repo memory as an Open Knowledge Format (OKF v0.2) bundle: one tagged, dated concept per learning, an index for progressive disclosure, and lossless migration from agent-memory.md.",
   "author": {
     "name": "Brian Schroeder",
     "url": "https://github.com/brianschroeder"
@@ -9,5 +9,13 @@
   "homepage": "https://github.com/brianschroeder/simple-agent-memory",
   "repository": "https://github.com/brianschroeder/simple-agent-memory",
   "license": "MIT",
-  "keywords": ["claude-code", "agent", "memory", "learnings", "context"]
+  "keywords": [
+    "claude-code",
+    "agent",
+    "memory",
+    "learnings",
+    "context",
+    "okf",
+    "open-knowledge-format"
+  ]
 }

@@ -8,7 +8,7 @@
     {
       "name": "simple-agent-memory",
       "source": ".",
-      "description": "Repo-level agent memory for Claude Code: a git-tracked learnings log agents read when stuck and append to as they work."
+      "description": "Repo memory as an Open Knowledge Format (OKF v0.2) bundle: one tagged, dated concept per learning, an index for progressive disclosure, and lossless migration from agent-memory.md."
     }
   ]
 }
